@@ -16,7 +16,7 @@ class Ad:
 
     def is_montreal(self):
         location = self.preview.find('.location').remove('span').text()
-        return location != 'Ville de Montréal'
+        return location == 'Ville de Montréal'
 
     def get_id(self):
         return self.preview.attr('data-ad-id')

@@ -3,6 +3,7 @@ from time import sleep
 from csv_writer import CsvWriter
 from db import Db
 from counter import Counter
+from ad_validator import AdValidator
 
 
 def print_both(text, f):
@@ -32,30 +33,11 @@ while page.has_next_page():
     for ad in page.get_ads():
         counter.increase_all()
         if ad.is_montreal():
-            counter.non_montreal()
-            continue
-        ad.load_full()
+            ad.load_full()
 
-        if ad.get_description() in descriptions:
-            counter.duplicate()
-            continue
-        else:
-            descriptions[ad.get_description()] = True
+        validator = AdValidator(ad, counter, descriptions)
 
-        if ad.get_closest_station()[1] > 1000:
-            counter.too_far()
-            continue
-
-        if ad.get_size() != '3 1/2' and ad.get_size() != '4 1/2':
-            counter.wrong_size()
-            continue
-
-        if ad.is_basement():
-            counter.basement()
-            continue
-
-        if ad.is_too_late():
-            counter.too_late()
+        if not validator.validate():
             continue
 
         print_both(ad.get_url(), f)
