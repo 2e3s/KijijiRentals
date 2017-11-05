@@ -96,16 +96,20 @@ class Ad:
         return has_washer and not has_laundry
 
     def _get_adapted_text(self):
-        text = unidecode(self.get_description()).lower()
-        text += unidecode(self.get_title_components()[0]).lower()
-        text = re.sub()
-        return text
+        """
+            :rtype: string
+        """
+        if self.cached_text is None:
+            cached_text = unidecode(self.get_description()).lower()
+            cached_text += unidecode(self.get_title_components()[0]).lower()
+            self.cached_text = Ad._regex.sub('', cached_text)
+
+        return self.cached_text
 
     def is_basement(self):
         text = self._get_adapted_text()
         return 'basement' in text \
                or 'sous so' in text \
-               or 'sous-so' in text \
                or 'sousso' in text \
                or 'bachelor' in text
 

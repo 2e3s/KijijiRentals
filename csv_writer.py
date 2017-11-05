@@ -1,6 +1,5 @@
 import csv
 from ad import Ad
-import sqlite3
 
 class CsvWriter:
     def __init__(self):

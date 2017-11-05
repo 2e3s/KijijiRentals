@@ -9,7 +9,7 @@ class Page:
         self.content = None
 
     def has_next_page(self):
-        return self.number < 101
+        return self.number < 20
 
     def get_next_page(self):
         return Page(self.number + 1)

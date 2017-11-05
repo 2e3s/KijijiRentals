@@ -2,6 +2,7 @@ from page import Page
 from time import sleep
 from csv_writer import CsvWriter
 from db import Db
+from counter import Counter
 
 
 def print_both(text, f):
@@ -21,6 +22,7 @@ counter_duplicates = 0
 counter_too_late = 0
 
 f = open("C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\result.txt", 'w+', encoding='utf-8')
+counter = Counter(f)
 csv_writer = CsvWriter()
 csv_writer.init()
 db = Db()
@@ -28,32 +30,32 @@ db = Db()
 while page.has_next_page():
     page.load_full()
     for ad in page.get_ads():
-        counter_all += 1
+        counter.increase_all()
         if ad.is_montreal():
-            counter_non_montreal += 1
+            counter.non_montreal()
             continue
         ad.load_full()
 
         if ad.get_description() in descriptions:
-            counter_duplicates += 1
+            counter.duplicate()
             continue
         else:
             descriptions[ad.get_description()] = True
 
         if ad.get_closest_station()[1] > 1000:
-            counter_too_far += 1
+            counter.too_far()
             continue
 
         if ad.get_size() != '3 1/2' and ad.get_size() != '4 1/2':
-            counter_non_size += 1
+            counter.wrong_size()
             continue
 
         if ad.is_basement():
-            counter_basement += 1
+            counter.basement()
             continue
 
         if ad.is_too_late():
-            counter_too_late += 1
+            counter.too_late()
             continue
 
         print_both(ad.get_url(), f)
@@ -70,15 +72,8 @@ while page.has_next_page():
 
     print('\nFetching page %s...\n' % str(page.number + 1))
     page = page.get_next_page()
-    # sleep(1)
 
-print_both('Filtered non-Montreal: %s' % counter_non_montreal, f)
-print_both('Filtered too far from metro: %s' % counter_too_far, f)
-print_both('Filtered non-size: %s' % counter_non_size, f)
-print_both('Filtered basements: %s' % counter_basement, f)
-print_both('Filtered duplicates: %s' % counter_duplicates, f)
-print_both('Filtered too late: %s' % counter_too_late, f)
-print_both('Total: %s' % counter_all, f)
+counter.print()
 
 f.close()
 csv_writer.finish()
