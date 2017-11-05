@@ -9,7 +9,7 @@ class Page:
         self.content = None
 
     def has_next_page(self):
-        return self.number < 20
+        return self.number < 101
 
     def get_next_page(self):
         return Page(self.number + 1)
@@ -17,10 +17,10 @@ class Page:
     def get_url(self):
         if (self.number == 1):
             return 'https://www.kijiji.ca/b-appartement-condo/ville-de-montreal/' \
-                   'c37l1700281r15.0?ad=offering&price=550__800&minNumberOfImages=1'
+                   'c37l1700281r15.0?ad=offering&price=600__850&minNumberOfImages=1'
         else:
             return 'https://www.kijiji.ca/b-appartement-condo/ville-de-montreal/page-%s/' \
-                   'c37l1700281r15.0?ad=offering&price=550__800&minNumberOfImages=1' % self.number
+                   'c37l1700281r15.0?ad=offering&price=600__850&minNumberOfImages=1' % self.number
 
     def load_full(self):
         cache_file = Path(self.get_cache_filename())

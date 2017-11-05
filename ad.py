@@ -102,6 +102,7 @@ class Ad:
         if self.cached_text is None:
             cached_text = unidecode(self.get_description()).lower()
             cached_text += unidecode(self.get_title_components()[0]).lower()
+            cached_text = re.sub('\s+', ' ', cached_text)
             self.cached_text = Ad._regex.sub('', cached_text)
 
         return self.cached_text
@@ -129,8 +130,21 @@ class Ad:
         metro_score = Metro.stations[metro[2]][3]
         distance_score = int(round(metro[1] / 10))
         washer_score = 50 if self.is_washer_mentioned() else 0
+        room_score = 50 if self.is_two_room() else 0
 
-        return metro_score * 2 + (100 - distance_score) + washer_score
+        return metro_score * 2 + (100 - distance_score) + washer_score + room_score
 
     def get_posted_date(self):
         return self.content('*[class^="datePosted-"]').find('time').attr('datetime')
+
+    def is_one_room(self):
+        return self.get_size() == '3 1/2'
+
+    def is_two_room(self):
+        return self.get_size() == '4 1/2'
+
+    def is_nothing_included(self):
+        text = self._get_adapted_text()
+        return 'nothing included' in text \
+               or 'rien inclu' in text \
+               or 'rien dinclu' in text

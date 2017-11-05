@@ -14,13 +14,6 @@ def print_both(text, f):
 descriptions = dict()
 
 page = Page(1)
-counter_non_montreal = 0
-counter_too_far = 0
-counter_all = 0
-counter_non_size = 0
-counter_basement = 0
-counter_duplicates = 0
-counter_too_late = 0
 
 f = open("C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\result.txt", 'w+', encoding='utf-8')
 counter = Counter(f)

@@ -7,6 +7,7 @@ class Counter:
         self.counter_basement = 0
         self.counter_duplicates = 0
         self.counter_too_late = 0
+        self.counter_nothing_included = 0
         self.counter_all = 0
 
     def increase_all(self):
@@ -30,6 +31,9 @@ class Counter:
     def too_late(self):
         self.counter_too_late += 1
 
+    def nothing_included(self):
+        self.counter_nothing_included += 1
+
     def print_both(self, text):
         print(text)
         print(text, file=self.file_pointer)
@@ -41,4 +45,5 @@ class Counter:
         self.print_both('Filtered basements: %s' % self.counter_basement)
         self.print_both('Filtered duplicates: %s' % self.counter_duplicates)
         self.print_both('Filtered too late: %s' % self.counter_too_late)
+        self.print_both('Filtered nothing included: %s' % self.counter_nothing_included)
         self.print_both('Total: %s' % self.counter_all)
