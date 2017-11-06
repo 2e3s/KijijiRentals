@@ -7,7 +7,7 @@ class CsvWriter:
         self.writer = None
 
     def init(self):
-        self.csvFile = open('C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\result.csv', 'w', newline='',
+        self.csvFile = open('cache/result.csv', 'w', newline='',
                             encoding='utf-8')
         self.writer = csv.DictWriter(self.csvFile, fieldnames=[
             'id',
