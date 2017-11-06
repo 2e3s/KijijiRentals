@@ -15,7 +15,7 @@ descriptions = dict()
 
 page = Page(1)
 
-f = open("C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\result.txt", 'w+', encoding='utf-8')
+f = open("cache/result.txt", 'w+', encoding='utf-8')
 counter = Counter(f)
 csv_writer = CsvWriter()
 csv_writer.init()
