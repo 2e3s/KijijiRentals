@@ -32,7 +32,7 @@ class Page:
 
     def get_cache_filename(self):
         filename = str(self.number) + '.html'
-        return "C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\pages\\" + filename
+        return "cache/pages/" + filename
 
     def load_cache(self):
         with open(self.get_cache_filename(), 'r', encoding='utf-8') as content_file:
