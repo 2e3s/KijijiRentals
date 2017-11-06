@@ -5,7 +5,7 @@ from datetime import datetime
 
 class Db:
     def __init__(self):
-        self.db = sqlite3.connect('C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\result.db')
+        self.db = sqlite3.connect('cache/result.db')
         cursor = self.db.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS ads(
