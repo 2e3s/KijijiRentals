@@ -4,6 +4,7 @@ from geopy.distance import vincenty
 from metro import Metro
 import re
 from unidecode import unidecode
+import datetime
 
 
 class Ad:
@@ -112,12 +113,16 @@ class Ad:
         return 'basement' in text \
                or 'sous so' in text \
                or 'sousso' in text \
+               or 'demisol' in text \
+               or 'demi sol' in text \
                or 'bachelor' in text
 
     def is_too_late(self):
         text = self._get_adapted_text()
         has_late = 'janvier' in text \
                    or 'january' in text \
+                   or 'december' in text \
+                   or 'decembre' in text \
                    or 'fevrier' in text \
                    or 'february' in text
 
@@ -135,7 +140,10 @@ class Ad:
         return metro_score * 2 + (100 - distance_score) + washer_score + room_score
 
     def get_posted_date(self):
-        return self.content('*[class^="datePosted-"]').find('time').attr('datetime')
+        date = self.content('*[class^="datePosted-"]').find('time').attr('datetime')
+        if date is None:
+            date = '2017-09-01T01:01:01.000Z'
+        return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.000Z').isoformat(' ')
 
     def is_one_room(self):
         return self.get_size() == '3 1/2'
@@ -146,5 +154,8 @@ class Ad:
     def is_nothing_included(self):
         text = self._get_adapted_text()
         return 'nothing included' in text \
+               or 'nonfurnish' in text \
+               or 'non furnish' in text \
+               or 'aucune inclu' in text \
                or 'rien inclu' in text \
                or 'rien dinclu' in text

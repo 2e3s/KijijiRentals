@@ -28,6 +28,7 @@ class Metro:
         [45.4924, -73.6327, 'Cote-Sainte-Catherine', 50],
         [45.4943, -73.6380, 'Plamondon', 50],
         [45.4950, -73.6530, 'Metro Namur', 40],
+        [45.5003, -73.6615, 'De la Savaine', 40],
         [45.5094, -73.6747, 'Du College', 40],
         [45.5142, -73.6832, 'Cote-Vertu', 30],
         # Blue line
@@ -40,11 +41,11 @@ class Metro:
         [45.5538, -73.6021, 'D\'Iberville', 40],
         # [45.55972, -73.60000, 'St-Michel', 60],
         # Green line
-        [45.4462, -73.6037, 'Terminus Angrignon', 20],
-        [45.4509, -73.5934, 'Monk', 30],
-        [45.4568, -73.5820, 'Jolicoeur', 40],
-        [45.4592, -73.5715, 'Verdun', 40],
-        [45.4618, -73.5665, 'De l\'Eglise', 40],
+        # [45.4462, -73.6037, 'Terminus Angrignon', 20],
+        # [45.4509, -73.5934, 'Monk', 30],
+        # [45.4568, -73.5820, 'Jolicoeur', 40],
+        # [45.4592, -73.5715, 'Verdun', 40],
+        # [45.4618, -73.5665, 'De l\'Eglise', 40],
         [45.4708, -73.5661, 'Station Lasalle', 40],
         [45.4782, -73.5693, 'Charlevoix', 80],
         [45.4828, -73.5797, 'Lionel Groulx', 100],
@@ -58,7 +59,7 @@ class Metro:
         [45.5237, -73.5521, 'Papineau', 30],
         # [45.5335, -73.5522, 'Frontenac', 60],
         # [45.5415, -73.5543, 'Prefontaine', 50],
-        [45.5470, -73.5515, 'Station Joliette', 10],
+        # [45.5470, -73.5515, 'Station Joliette', 10],
         # [45.5540, -73.5519, 'Pie-IX'],
         # [45.5612, -73.5472, 'Viau'],
         # [],  # Station Assomption

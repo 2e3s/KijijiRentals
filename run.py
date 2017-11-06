@@ -27,11 +27,13 @@ while page.has_next_page():
         counter.increase_all()
         if ad.is_montreal():
             ad.load_full()
+        else:
+            continue
 
         validator = AdValidator(ad, counter, descriptions)
 
-        if not validator.validate():
-            continue
+        # if not validator.validate():
+        #     continue
 
         print_both(ad.get_url(), f)
         print_both(ad.get_title_components() + [ad.get_price()], f)
