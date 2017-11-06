@@ -35,7 +35,7 @@ class Ad:
 
     def get_cache_filename(self):
         filename = self.get_id() + '.html'
-        return "C:\\Users\\2e3s\\PycharmProjects\\rentkijiji\\cache\\subpages\\" + filename
+        return "cache/subpages/" + filename
 
     def load_cache(self):
         with open(self.get_cache_filename(), 'r', encoding='utf-8') as content_file:
