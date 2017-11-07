@@ -151,6 +151,9 @@ class Ad:
     def is_two_room(self):
         return self.get_size() == '4 1/2'
 
+    def is_near_work(self):
+        return vincenty((45.5272605, -73.6195236), self.get_coord()).meters < 5000
+
     def is_nothing_included(self):
         text = self._get_adapted_text()
         return 'nothing included' in text \
