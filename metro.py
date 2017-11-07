@@ -56,7 +56,7 @@ class Metro:
         [45.5108, -73.5648, 'Saint-Laurent', 90],
         # [Berri UQAM],  #
         [45.5190, -73.5559, 'Beaudry', 70],
-        [45.5237, -73.5521, 'Papineau', 30],
+        # [45.5237, -73.5521, 'Papineau', 30],
         # [45.5335, -73.5522, 'Frontenac', 60],
         # [45.5415, -73.5543, 'Prefontaine', 50],
         # [45.5470, -73.5515, 'Station Joliette', 10],

@@ -4,11 +4,20 @@ from csv_writer import CsvWriter
 from db import Db
 from counter import Counter
 from ad_validator import AdValidator
+import os, errno
 
 
 def print_both(text, f):
     print(text)
     print(text, file=f)
+
+
+try:
+    os.makedirs('cache/pages')
+    os.makedirs('cache/subpages')
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
 
 
 descriptions = dict()
