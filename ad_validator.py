@@ -21,7 +21,7 @@ class AdValidator:
             self.descriptions[self.ad.get_description()] = True
 
         if self.ad.is_near_work():
-            if self.ad.get_closest_station()[1] > 2000:
+            if self.ad.get_closest_station()[1] > 1700:
                 self.counter.too_far()
                 print(self.ad.get_id() + ' is too far...........')
                 return False
