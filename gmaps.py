@@ -1,7 +1,7 @@
 import sqlite3
 import configparser
 import googlemaps
-import datetime
+from datetime import datetime, timedelta
 
 
 class Coordinate:
@@ -52,8 +52,8 @@ class GMaps:
         self.db.close()
 
     def _get_transit_time(self, point1: tuple, point2: tuple):
-        today_date = datetime.datetime.now().strftime('%Y-%m-%d 09:00:00')
-        date = datetime.datetime.strptime(today_date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(days=1)
+        today_date = datetime.now().strftime('%Y-%m-%d 09:00:00')
+        date = datetime.strptime(today_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=1)
         time = date.timestamp()
         self.gmaps.directions(str(point1[0]) + ' ' + str(point1[1]),
                               str(point2[0]) + ' ' + str(point2[1]),
@@ -62,8 +62,8 @@ class GMaps:
                               departure_time=time)
 
     def _get_foot_time(self, point1: tuple, point2: tuple):
-        today_date = datetime.datetime.now().strftime('%Y-%m-%d 09:00:00')
-        date = datetime.datetime.strptime(today_date, '%Y-%m-%d %H:%M:%S') + datetime.timedelta(days=1)
+        today_date = datetime.now().strftime('%Y-%m-%d 09:00:00')
+        date = datetime.strptime(today_date, '%Y-%m-%d %H:%M:%S') + timedelta(days=1)
         time = date.timestamp()
         self.gmaps.directions(str(point1[0]) + ' ' + str(point1[1]),
                               str(point2[0]) + ' ' + str(point2[1]),

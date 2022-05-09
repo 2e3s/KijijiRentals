@@ -1,12 +1,14 @@
 import sqlite3
-from ad import Ad
+from typing import Union, Any
+
+from ad import Ad, AdPreview
 from datetime import datetime
 
 
-class Db:
-    def __init__(self):
-        self.db = sqlite3.connect('cache/result.db')
-        cursor = self.db.cursor()
+class AdStorage:
+    def __enter__(self) -> None:
+        self.connection = sqlite3.connect('cache/result.db')
+        cursor = self.connection.cursor()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS ads(
                 id INTEGER PRIMARY KEY,
@@ -15,7 +17,7 @@ class Db:
                 description TEXT,
                 postedTime INTEGER,
                 price INTEGER,
-                rooms TEXT,
+                bedrooms INTEGER,
                 isNothingIncluded BOOLEAN,
                 score INTEGER,
                 isLate BOOLEAN,
@@ -25,10 +27,10 @@ class Db:
                 closestMetroDistance INTEGER
             )
         ''')
-        self.db.commit()
+        self.connection.commit()
 
-    def insert(self, ad: Ad):
-        cursor = self.db.cursor()
+    def insert(self, ad: Ad) -> None:
+        cursor = self.connection.cursor()
         cursor.execute('''REPLACE INTO ads(
             id,
             title,
@@ -36,31 +38,35 @@ class Db:
             description,
             postedTime,
             price,
-            rooms,
+            bedrooms,
             isNothingIncluded,
             score,
-            isLate,
             isBasement,
             isWasherMentioned,
             closestMetro,
             closestMetroDistance
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
-            ad.get_id(),
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            ad.id,
             ad.get_title_components()[0],
-            ad.get_url(),
+            ad.url,
             ad.get_description(),
             int(datetime.strptime(ad.get_posted_date(), '%Y-%m-%d %H:%M:%S').timestamp()),
             ad.get_price(),
-            ad.get_size(),
+            ad.bedrooms_count(),
             ad.is_nothing_included(),
             ad.get_score(),
-            ad.is_too_late(),
             ad.is_basement(),
             ad.is_washer_mentioned(),
-            ad.get_closest_station()[0],
-            ad.get_closest_station()[1]
+            ad.closest_metro().name,
+            ad.closest_metro().distance()
         ))
-        self.db.commit()
+        self.connection.commit()
 
-    def finish(self):
-        self.db.close()
+    def has_ad(self, ad: Union[Ad, AdPreview]) -> bool:
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT COUNT(*) FROM ads WHERE id = ?', (ad.id,))
+        count = int(cursor.fetchone()[0])
+        return count != 0
+
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        self.connection.close()

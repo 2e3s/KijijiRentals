@@ -3,3 +3,4 @@ cache*
 mainpage*
 .idea
 settings.ini
+.mypy_cache
