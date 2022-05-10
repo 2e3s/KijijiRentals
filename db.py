@@ -1,5 +1,5 @@
 import sqlite3
-from typing import Union, Any
+from typing import Union, Any, Iterable
 
 from ad import Ad, AdPreview
 from datetime import datetime
@@ -68,6 +68,13 @@ class AdStorage:
         cursor.execute('SELECT COUNT(*) FROM ads WHERE id = ?', (ad.id,))
         count = int(cursor.fetchone()[0])
         return count != 0
+
+    def get_ad_previews(self) -> Iterable[AdPreview]:
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT url FROM ads')
+        rows = cursor.fetchall()
+        for row in rows:
+            yield AdPreview(row[0])
 
     def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         self.connection.close()

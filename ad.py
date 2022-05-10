@@ -16,14 +16,17 @@ class RetryAdException(Exception):
 
 
 class AdPreview:
-    _regex_id = re.compile(r"\d+$")
+    _regex_id = re.compile(r"(\d+)\D*$")
 
     def __init__(self, link: str) -> None:
-        self.url = link + '?siteLocale=en_CA'
+        if 'en_CA' not in link:
+            self.url = link + '?siteLocale=en_CA'
+        else:
+            self.url = link
 
         id_match = AdPreview._regex_id.search(link)
         if id_match:
-            self.id = id_match.group(0)
+            self.id = id_match.group(1)
         else:
             raise
 

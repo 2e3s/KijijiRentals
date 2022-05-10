@@ -19,10 +19,10 @@ def print_both(text: Any, file: IO[str]) -> None:
     print(text, file=file)
 
 
-def process_ad(_ad_preview: AdPreview) -> bool:
+def process_ad(_ad_preview: AdPreview, unique: bool) -> bool:
     counter.increase_all()
 
-    if ad_storage.has_ad(_ad_preview):
+    if unique and ad_storage.has_ad(_ad_preview):
         print_both('Ad {} is already parsed\n'.format(_ad_preview.id), f)
         return False
 
@@ -76,6 +76,7 @@ ad_storage = AdStorage()
 
 parser = ArgumentParser(description="Kijiji rentals parser")
 parser.add_argument("--rss", action='store_true', help="Parse RSS feed")
+parser.add_argument("--redo", action='store_true', help="Reprocess existing ads")
 parser.add_argument("--pages", type=int, default=5, help="How many pages to go through")
 args = parser.parse_args()
 
@@ -85,7 +86,11 @@ with csv_writer, ad_storage:
         for (ad_preview, point) in Feed().load_ads():
             if not AdValidator.validate_coordinate(point, counter):
                 continue
-            if process_ad(ad_preview):
+            if process_ad(ad_preview, True):
+                sleep(0.1)
+    elif args.redo:
+        for ad_preview in ad_storage.get_ad_previews():
+            if process_ad(ad_preview, False):
                 sleep(0.1)
     else:
         print_both('Loading {} pages'.format(args.pages), f)
@@ -93,7 +98,7 @@ with csv_writer, ad_storage:
 
         for loaded_page in page_loader.fetch():
             for ad_preview in loaded_page.get_ads():
-                if process_ad(ad_preview):
+                if process_ad(ad_preview, True):
                     sleep(0.1)
             sleep(1)
             print('\nFetching page %s...\n' % str(loaded_page.number + 1))
