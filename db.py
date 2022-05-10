@@ -24,7 +24,8 @@ class AdStorage:
                 isBasement BOOLEAN,
                 isWasherMentioned BOOLEAN,
                 closestMetro TEXT,
-                closestMetroDistance INTEGER
+                closestMetroDistance INTEGER,
+                isRemoved BOOLEAN
             )
         ''')
         self.connection.commit()
