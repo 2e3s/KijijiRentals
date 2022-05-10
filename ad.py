@@ -162,13 +162,15 @@ class Ad:
         room_score = (self.bedrooms_count() - 2) * 100
         price_score = int((1900 - self.get_price()) / 10)
         first_floor_score = 100 if self.is_first_floor() else 0
+        last_floor_score = -50 if self.is_last_floor() else 0
 
         return metro_score * 2 \
             + distance_score \
             + washer_score \
             + room_score \
             + price_score \
-            + first_floor_score
+            + first_floor_score \
+            + last_floor_score
 
     def is_first_floor(self) -> bool:
         match1 = re.match('rez[\\s-]?de[\\s-]?chauss', self.get_description())
@@ -176,6 +178,12 @@ class Ad:
         match3 = re.match('1(st)? floor', self.get_description())
 
         return match1 is not None or match2 is not None or match3 is not None
+
+    def is_last_floor(self) -> bool:
+        match1 = re.match('derniere? [eé]tage', self.get_description())
+        match2 = re.match('last floor', self.get_description())
+
+        return match1 is not None or match2 is not None
 
     def get_posted_date(self) -> str:
         date = self.content('*[class^="datePosted-"]').find('time').attr('datetime')
