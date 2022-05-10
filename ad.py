@@ -182,8 +182,9 @@ class Ad:
     def is_last_floor(self) -> bool:
         match1 = re.match('derniere? [eé]tage', self.get_description())
         match2 = re.match('last floor', self.get_description())
+        match3 = re.match('(third|3rd) floor', self.get_description())
 
-        return match1 is not None or match2 is not None
+        return match1 is not None or match2 is not None or match3 is not None
 
     def get_posted_date(self) -> str:
         date = self.content('*[class^="datePosted-"]').find('time').attr('datetime')
