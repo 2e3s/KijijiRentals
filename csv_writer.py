@@ -27,13 +27,13 @@ class CsvWriter:
 
     def write_csv(self, ad: Ad) -> None:
         if self.writer:
-            metro = ad.get_closest_station()
+            metro = ad.closest_metro()
             self.writer.writerow({
                 'id': ad.get_id(),
                 'url': ad.get_url(),
                 'has_washer': 'yes' if ad.is_washer_mentioned() else 'no',
-                'metro station': metro[0],
-                'metro distance': metro[1],
+                'metro station': metro.name,
+                'metro distance': metro.distance(),
                 'title': ad.get_title_components()[0],
                 'score': ad.get_score(),
                 'price': ad.get_price(),

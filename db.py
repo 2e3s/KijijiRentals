@@ -39,8 +39,9 @@ class AdStorage:
         if self.has_ad(ad):
             cursor = self.connection.cursor()
             cursor.execute('SELECT createdAt, isRemoved FROM ads WHERE id = ?', (ad.id,))
-            created_at = str(cursor.fetchone()[0])
-            is_removed = int(cursor.fetchone()[1])
+            row = cursor.fetchone()
+            created_at = str(row[0])
+            is_removed = int(row[1])
         else:
             created_at = self.current_time
             is_removed = 0

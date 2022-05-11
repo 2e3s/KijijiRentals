@@ -1,9 +1,7 @@
 import os
 from typing import List, Tuple, Optional
-
 from pyquery import PyQuery as pq, PyQuery
 from pathlib import Path
-from geopy.distance import geodesic
 from requests.exceptions import ChunkedEncodingError
 from metro import Metro
 import re
@@ -72,6 +70,9 @@ class Ad:
         self.id = preview.id
         self.content = preview.load_full()
         self.cached_text: Optional[str] = None
+        self._description: Optional[str] = None
+        self._coord: Optional[Tuple[float, float]] = None
+        self._closest_metro: Optional[Metro] = None
 
     def get_id(self) -> str:
         return self.id
@@ -80,21 +81,16 @@ class Ad:
         return self.url
 
     def get_coord(self) -> Tuple[float, float]:
-        latitude = self.content("meta[property='og:latitude']").attr("content")
-        longitude = self.content("meta[property='og:longitude']").attr("content")
-        return float(latitude), float(longitude)
-
-    def get_closest_station(self) -> Tuple[str, float, int]:
-        station = Metro.get_closest(self.get_coord())
-
-        return station.name, station.distance_to(self.get_coord()), station.index
+        if self._coord is None:
+            latitude = self.content("meta[property='og:latitude']").attr("content")
+            longitude = self.content("meta[property='og:longitude']").attr("content")
+            self._coord = float(latitude), float(longitude)
+        return self._coord
 
     def closest_metro(self) -> Metro:
-        return Metro.get_closest(self.get_coord())
-
-    def get_closest_station_distance(self) -> float:
-        metro = self.get_closest_station()
-        return round(geodesic((metro[0], metro[1]), self.get_coord()).meters)
+        if self._closest_metro is None:
+            self._closest_metro = Metro.get_closest(self.get_coord())
+        return self._closest_metro
 
     def get_title_components(self) -> List[str]:
         # GRAND 3 ½ - UdeM, HEC, HOPITAL – Semi-meublé | 3 1/2 | Ville de Montréal | Kijiji
@@ -113,9 +109,6 @@ class Ad:
         else:
             raise
 
-    def get_size(self) -> str:
-        return self.get_title_components()[0]
-
     def _has_price(self) -> bool:
         price = str(self.content('[class^=currentPrice-]').text())
         return price.strip().lower() != 'please contact'
@@ -125,7 +118,9 @@ class Ad:
         return int(price) if self._has_price() else -1
 
     def get_description(self) -> str:
-        return str(self.content('*[class^="descriptionContainer-"]').text())
+        if self._description is None:
+            self._description = str(self.content('*[class^="descriptionContainer-"]').text())
+        return self._description
 
     def is_washer_mentioned(self) -> bool:
         text = self._get_adapted_text()
@@ -173,9 +168,9 @@ class Ad:
             + last_floor_score
 
     def is_first_floor(self) -> bool:
-        match1 = re.match('rez[\\s-]?de[\\s-]?chauss', self.get_description())
-        match2 = re.match('first floor', self.get_description())
-        match3 = re.match('1(st)? floor', self.get_description())
+        match1 = re.search('rez[\\s-]?de[\\s-]?chauss', self.get_description())
+        match2 = re.search('first floor', self.get_description())
+        match3 = re.search('1(st)? floor', self.get_description())
 
         return match1 is not None or match2 is not None or match3 is not None
 
@@ -191,9 +186,6 @@ class Ad:
         if date is None:
             raise
         return datetime.datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.000Z').isoformat(' ')
-
-    def is_near_work(self) -> bool:
-        return int(geodesic((45.5272605, -73.6195236), self.get_coord()).meters) < 10000
 
     def is_nothing_included(self) -> bool:
         text = self._get_adapted_text()
