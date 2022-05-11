@@ -6,7 +6,7 @@ from datetime import datetime
 
 
 class AdStorage:
-    def __init__(self):
+    def __init__(self) -> None:
         self.current_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
     def __enter__(self) -> None:
