@@ -6,6 +6,9 @@ from datetime import datetime
 
 
 class AdStorage:
+    def __init__(self):
+        self.current_time = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+
     def __enter__(self) -> None:
         self.connection = sqlite3.connect('cache/result.db')
         cursor = self.connection.cursor()
@@ -25,12 +28,21 @@ class AdStorage:
                 isWasherMentioned BOOLEAN,
                 closestMetro TEXT,
                 closestMetroDistance INTEGER,
-                isRemoved BOOLEAN
+                hasFloor INTEGER DEFAULT 0,
+                isRemoved BOOLEAN,
+                createdAt timestamp DEFAULT CURRENT_TIMESTAMP
             )
         ''')
         self.connection.commit()
 
     def insert(self, ad: Ad) -> None:
+        if self.has_ad(ad):
+            cursor = self.connection.cursor()
+            cursor.execute('SELECT createdAt FROM ads WHERE id = ?', (ad.id,))
+            created_at = str(cursor.fetchone()[0])
+        else:
+            created_at = self.current_time
+
         cursor = self.connection.cursor()
         cursor.execute('''REPLACE INTO ads(
             id,
@@ -45,8 +57,10 @@ class AdStorage:
             isBasement,
             isWasherMentioned,
             closestMetro,
-            closestMetroDistance
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            closestMetroDistance,
+            hasFloor,
+            createdAt
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             ad.id,
             ad.get_title_components()[0],
             ad.url,
@@ -59,7 +73,9 @@ class AdStorage:
             ad.is_basement(),
             ad.is_washer_mentioned(),
             ad.closest_metro().name,
-            ad.closest_metro().distance()
+            ad.closest_metro().distance(),
+            -1 if ad.is_last_floor() else (1 if ad.is_first_floor() else 0),
+            created_at,
         ))
         self.connection.commit()
 
