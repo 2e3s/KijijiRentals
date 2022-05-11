@@ -28,9 +28,9 @@ class AdStorage:
                 isWasherMentioned BOOLEAN,
                 closestMetro TEXT,
                 closestMetroDistance INTEGER,
-                hasFloor INTEGER DEFAULT 0,
                 isRemoved BOOLEAN,
-                createdAt timestamp DEFAULT CURRENT_TIMESTAMP
+                createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
+                hasFloor INTEGER DEFAULT 0
             )
         ''')
         self.connection.commit()
