@@ -38,10 +38,12 @@ class AdStorage:
     def insert(self, ad: Ad) -> None:
         if self.has_ad(ad):
             cursor = self.connection.cursor()
-            cursor.execute('SELECT createdAt FROM ads WHERE id = ?', (ad.id,))
+            cursor.execute('SELECT createdAt, isRemoved FROM ads WHERE id = ?', (ad.id,))
             created_at = str(cursor.fetchone()[0])
+            is_removed = int(cursor.fetchone()[1])
         else:
             created_at = self.current_time
+            is_removed = 0
 
         cursor = self.connection.cursor()
         cursor.execute('''REPLACE INTO ads(
@@ -59,8 +61,9 @@ class AdStorage:
             closestMetro,
             closestMetroDistance,
             hasFloor,
+            isRemoved,
             createdAt
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
+            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)''', (
             ad.id,
             ad.get_title_components()[0],
             ad.url,
@@ -75,6 +78,7 @@ class AdStorage:
             ad.closest_metro().name,
             ad.closest_metro().distance(),
             -1 if ad.is_last_floor() else (1 if ad.is_first_floor() else 0),
+            is_removed,
             created_at,
         ))
         self.connection.commit()
