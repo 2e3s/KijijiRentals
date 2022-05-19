@@ -147,6 +147,7 @@ class Ad:
                or 'sousso' in text \
                or 'demisol' in text \
                or 'demi sol' in text \
+               or 'rez-de-jardin' in text \
                or 'bachelor' in text
 
     def get_score(self) -> int:
@@ -154,7 +155,7 @@ class Ad:
         metro_score = metro.score
         distance_score = 100 - int(round(metro.distance() / 10))
         washer_score = 50 if self.is_washer_mentioned() else 0
-        room_score = (self.bedrooms_count() - 2) * 100
+        room_score = (self.bedrooms_count() - 2) * 80
         price_score = int((1900 - self.get_price()) / 10)
         first_floor_score = 100 if self.is_first_floor() else 0
         last_floor_score = -50 if self.is_last_floor() else 0
@@ -169,15 +170,15 @@ class Ad:
 
     def is_first_floor(self) -> bool:
         match1 = re.search('rez[\\s-]?de[\\s-]?chauss', self.get_description())
-        match2 = re.search('first floor', self.get_description())
-        match3 = re.search('1(st)? floor', self.get_description())
+        match2 = re.search('first\s+floor', self.get_description())
+        match3 = re.search('1(?:st)?\s+floor', self.get_description())
 
         return match1 is not None or match2 is not None or match3 is not None
 
     def is_last_floor(self) -> bool:
-        match1 = re.search('derniere? [eé]tage', self.get_description())
-        match2 = re.search('(top|upper|last) floor', self.get_description())
-        match3 = re.search('(third|3rd) floor', self.get_description())
+        match1 = re.search('(?:3|3e|derniere?|(?:trois|3\s?)i?[eèé]me)\s+[èeé]tage', self.get_description())
+        match2 = re.search('(?:top|upper|last)\s+floor', self.get_description())
+        match3 = re.search('(?:third|3rd)\s+floor', self.get_description())
 
         return match1 is not None \
             or match2 is not None \
